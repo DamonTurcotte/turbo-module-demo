@@ -6,25 +6,34 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.nativelocalstorage.NativeLocalStorageSpec
 
 class NativeLocalStorageModule(reactContext: ReactApplicationContext) : NativeLocalStorageSpec(reactContext) {
-    private val sharedPreferences: SharedPreferences = reactContext.getSharedPreferences("StoragePrefs", Context.MODE_PRIVATE)
 
     override fun getName() = NAME
 
-    override fun setItem(key: String, value: String) {
-        sharedPreferences.edit().putString(key, value).apply()
+    override fun setItem(value: String, key: String) {
+        val sharedPref = getReactApplicationContext().getSharedPreferences("StoragePrefs", Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.putString(key, value)
+        editor.apply()
     }
 
     override fun getItem(key: String): String? {
-        val item = sharedPreferences.getString(key, null)
+        val sharedPref = getReactApplicationContext().getSharedPreferences("StoragePrefs", Context.MODE_PRIVATE)
+        val item = sharedPref.getString(key, null)
         return item.toString()
     }
 
     override fun removeItem(key: String) {
-        sharedPreferences.edit().remove(key).apply()
+        val sharedPref = getReactApplicationContext().getSharedPreferences("StoragePrefs", Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.remove(key)
+        editor.apply()
     }
 
     override fun clear() {
-        sharedPreferences.edit().clear().apply()
+        val sharedPref = getReactApplicationContext().getSharedPreferences("StoragePrefs", Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.clear()
+        editor.apply()
     }
 
     companion object {
